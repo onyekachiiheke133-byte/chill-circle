@@ -1,0 +1,58 @@
+/* landing.css placeholder */ 
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #0a0a0f;
+  font-family: 'Segoe UI', sans-serif;
+  color: #fff;
+  height: 100vh;
+  overflow: hidden;
+  
+  /* Fade in on load */
+  animation: fadeIn 0.8s ease-in;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  gap: 40px;
+}
+
+.title {
+  font-size: 3.5rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #a855f7, #ec4899);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: 2px;
+}
+
+.enter-btn {
+  padding: 14px 40px;
+  background: linear-gradient(135deg, #a855f7, #7c3aed);
+  color: #fff;
+  text-decoration: none;
+  border-radius: 50px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.4);
+}
+
+.enter-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 30px rgba(168, 85, 247, 0.7);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}

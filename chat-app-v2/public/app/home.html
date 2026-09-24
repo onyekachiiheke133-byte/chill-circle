@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chill Circle - Home</title>
+  <style>
+    body { font-family: system-ui; background: #0f0f1a; color: #fff; display: flex; justify-content: center; padding: 40px; }
+    .card { background: #1a1a2e; padding: 30px; border-radius: 16px; width: 400px; }
+    .avatar { width: 80px; height: 80px; border-radius: 50%; background: #333; margin-bottom: 15px; object-fit: cover; }
+    h2 { margin: 0; }
+    p { color: #aaa; }
+    button { 
+      margin-top: 20px; 
+      margin-right: 10px; /* adds space between buttons */
+      padding: 10px 20px; 
+      border: none; 
+      border-radius: 8px; 
+      cursor: pointer; 
+      background: #ff4da6; 
+      color: white; 
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <img id="avatar" class="avatar" src="" alt="avatar" />
+    <h2 id="username">Loading...</h2>
+    <p id="bio">No bio yet</p>
+    <p><b>DOB:</b> <span id="dob">-</span></p>
+    <p><b>Gender:</b> <span id="gender">-</span></p>
+    <button id="editProfile">Edit Profile</button>
+    <button id="logout">Logout</button>
+  </div>
+
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
+
+    const SUPABASE_URL = 'https://ukuyzqbeestcvlxfrlgs.supabase.co'
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVrdXl6cWJlZXN0Y3ZseGZybGdzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg4NTczNjgsImV4cCI6MjEwNDQzMzM2OH0.bziUlXiXQimPvImX_z-5pANilnmqeG6xqvQJeM_ZZu4'
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+
+    // 1. Check if user is logged in
+    const { data: { user } } = await supabase.auth.getUser();
+    
+    if (!user) {
+      window.location.href = '../auth/sign.html'; // kick back to login if not logged in
+    }
+
+    // 2. Fetch profile data from profiles table
+    const { data: profile, error } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', user.id)
+      .single();
+
+    if (error) {
+      console.log("Error fetching profile:", error.message);
+    }
+
+    if (profile) {
+      document.getElementById('username').textContent = profile.username;
+      document.getElementById('bio').textContent = profile.bio || 'No bio yet';
+      document.getElementById('dob').textContent = profile.dob || '-';
+      document.getElementById('gender').textContent = profile.gender || '-';
+      
+      // Show avatar if it exists
+      if(profile.avatar_url) {
+        document.getElementById('avatar').src = profile.avatar_url;
+      }
+    }
+
+    // Logout
+    document.getElementById('logout').addEventListener('click', async () => {
+      await supabase.auth.signOut();
+      window.location.href = '../auth/sign.html'; // FIXED PATH
+    });
+
+    // Go to Edit page
+    document.getElementById('editProfile').addEventListener('click', () => {
+      window.location.href = '../auth/edit.html'; // FIXED PATH
+    });
+
+  </script>
+</body>
+</html>

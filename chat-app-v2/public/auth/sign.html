@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chill Circle - Login</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #1a1a1a;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+  }
+  .box {
+    background: #2a2a2a;
+    padding: 30px;
+    border-radius: 10px;
+    width: 350px;
+  }
+  h2 { text-align: center; margin-bottom: 20px; }
+  .tabs { display: flex; margin-bottom: 20px; }
+  .tab {
+    flex: 1; padding: 10px; background: #333;
+    border: none; color: white; cursor: pointer;
+  }
+  .tab.active { background: #5865F2; }
+  input, select, textarea {
+    width: 100%; padding: 10px; margin: 8px 0;
+    background: #1a1a1a; border: 1px solid #444;
+    color: white; border-radius: 5px; box-sizing: border-box;
+  }
+  button {
+    width: 100%; padding: 12px; margin-top: 10px;
+    background: #5865F2; border: none; color: white;
+    border-radius: 5px; cursor: pointer; font-weight: bold;
+  }
+  button:hover { background: #4752C4; }
+  .error { color: #ff4444; font-size: 14px; margin-top: 10px; text-align: center; }
+  .hidden { display: none; }
+</style>
+</head>
+<body>
+
+<div class="box">
+  <h2>Chill Circle</h2>
+  
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('login')">Login</button>
+    <button class="tab" onclick="showTab('signup')">Sign Up</button>
+  </div>
+
+  <!-- LOGIN FORM -->
+  <form id="loginForm">
+    <input type="email" id="loginEmail" placeholder="Email" required>
+    <input type="password" id="loginPassword" placeholder="Password" required>
+    <button type="submit">Login</button>
+  </form>
+
+  <!-- SIGNUP FORM -->
+  <form id="signupForm" class="hidden">
+    <input type="text" id="signupUsername" placeholder="Username *" required>
+    <input type="email" id="signupEmail" placeholder="Email *" required>
+    <input type="password" id="signupPassword" placeholder="Password *" required>
+    <input type="password" id="signupConfirm" placeholder="Confirm Password *" required>
+    <input type="date" id="signupDob" required>
+    <select id="signupGender" required>
+      <option value="">Gender *</option>
+      <option value="male">Male</option>
+      <option value="female">Female</option>
+      <option value="other">Other</option>
+    </select>
+    <textarea id="signupBio" placeholder="About you - optional" rows="2"></textarea>
+    <button type="submit">Register</button>
+  </form>
+
+  <div id="errorMsg" class="error"></div>
+</div>
+
+<script type="module" src="auth.js"></script>
+
+<script>
+function showTab(tab) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('form').forEach(f => f.classList.add('hidden'));
+  
+  if(tab === 'login') {
+    document.querySelector('.tab:nth-child(1)').classList.add('active');
+    document.getElementById('loginForm').classList.remove('hidden');
+  } else {
+    document.querySelector('.tab:nth-child(2)').classList.add('active');
+    document.getElementById('signupForm').classList.remove('hidden');
+  }
+}
+</script>
+
+</body>
+</html>

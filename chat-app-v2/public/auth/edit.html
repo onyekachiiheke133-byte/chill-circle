@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Edit Profile</title>
+  <style>
+    body { font-family: sans-serif; background: #0a0a0a; color: white; display: flex; justify-content: center; padding: 40px; }
+    form { background: #111; padding: 20px; border-radius: 12px; width: 300px; display: flex; flex-direction: column; gap: 12px; }
+    input, textarea, select, button { padding: 10px; border-radius: 8px; border: none; background: #222; color: white; }
+    button { background: #ff4da6; cursor: pointer; font-weight: bold; }
+    #preview { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; margin: 10px auto; display: block; background: #333; }
+  </style>
+</head>
+<body>
+  <form id="editForm">
+    <h2>Edit Profile</h2>
+    <img id="preview" src="" />
+    <input type="file" id="editAvatar" accept="image/*" />
+    <input type="text" id="editUsername" placeholder="Username" required />
+    <textarea id="editBio" placeholder="Bio"></textarea>
+    <input type="date" id="editDob" />
+    <select id="editGender">
+      <option value="">Select Gender</option>
+      <option>Male</option>
+      <option>Female</option>
+      <option>Other</option>
+    </select>
+    <button type="submit">Save Changes</button>
+    <button type="button" id="backBtn">Back to Home</button>
+  </form>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const { createClient } = supabase
+  const SUPABASE_URL = 'https://ukuyzqbeestcvlxfrlgs.supabase.co'
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVrdXl6cWJlZXN0Y3ZseGZybGdzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg4NTczNjgsImV4cCI6MjEwNDQzMzM2OH0.bziUlXiXQimPvImX_z-5pANilnmqeG6xqvQJeM_ZZu4'
+  const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY) // <-- this is your client
+
+  let currentUser;
+  let avatarFile;
+
+  // 1. Load current profile
+  supabaseClient.auth.getUser().then(async ({data: {user}}) => { // FIXED
+    if(!user) {
+      window.location.href = '../auth/sign.html';
+      return;
+    }
+    currentUser = user;
+    const {data: profile} = await supabaseClient.from('profiles').select('*').eq('id', user.id).single(); // FIXED
+
+    if(profile) {
+      document.getElementById('editUsername').value = profile.username || '';
+      document.getElementById('editBio').value = profile.bio || '';
+      document.getElementById('editDob').value = profile.dob || '';
+      document.getElementById('editGender').value = profile.gender || '';
+      if(profile.avatar_url) document.getElementById('preview').src = profile.avatar_url;
+    }
+  });
+
+  // 2. Preview new avatar
+  document.getElementById('editAvatar').addEventListener('change', (e) => {
+    avatarFile = e.target.files[0];
+    if(avatarFile) document.getElementById('preview').src = URL.createObjectURL(avatarFile);
+  });
+
+  // 3. Save changes
+document.getElementById('editForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  let avatar_url = document.getElementById('preview').src;
+
+  // Upload new avatar if they picked one
+  if(avatarFile) {
+    const fileName = `${currentUser.id}/${Date.now()}`;
+    const {data, error} = await supabaseClient.storage.from('avatars').upload(fileName, avatarFile);
+    if(error) return alert(error.message);
+    const {data: {publicUrl}} = supabaseClient.storage.from('avatars').getPublicUrl(fileName);
+    avatar_url = publicUrl;
+  }
+
+  // UPSERT = insert if new, update if exists
+  const {error} = await supabaseClient.from('profiles').upsert({
+    id: currentUser.id, // THIS IS THE KEY
+    username: document.getElementById('editUsername').value,
+    bio: document.getElementById('editBio').value,
+    dob: document.getElementById('editDob').value,
+    gender: document.getElementById('editGender').value,
+    avatar_url
+  }, { onConflict: 'id' });
+
+  if(error) alert(error.message);
+  else {
+    alert('Profile updated!');
+    window.location.href = '../app/home.html';
+  }
+});
+
+  // 4. Back button
+  document.getElementById('backBtn').addEventListener('click', () => {
+    window.location.href = '../app/home.html';
+  });
+</script>
+</body>
+</html>

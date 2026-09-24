@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat Room</title>
+  <link rel="stylesheet" href="chat.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+  <div class="layout">
+    
+    <!-- LEFT SIDEBAR -->
+    <aside class="left-sidebar">
+      <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Search users...">
+      </div>
+
+      <nav class="nav-section">
+        <div class="nav-item" id="profileBtn">PROFILE</div>
+        <div class="nav-item" data-view="notifications" style="display:flex; justify-content:space-between; align-items:center;">
+          <span>NOTIFICATIONS</span>
+          <span id="notifCount" style="background:#2a5bd7; color:#fff; padding:2px 8px; border-radius:12px; font-size:11px; min-width:18px; text-align:center; display:none; font-weight:bold;">0</span>
+        </div>
+        <div class="nav-item" data-view="messages">MESSAGES</div>
+        <div class="nav-item" data-view="friends">FRIENDS</div>
+        <div class="nav-item" data-view="online">ONLINE</div>
+        <div class="nav-item" data-view="blocked">BLOCKED</div>
+      </nav>
+
+      <div class="rooms-section">
+        <div class="section-header rooms-header-row" id="roomsToggle">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <h3>ROOMS</h3>
+            <span class="arrow">▼</span>
+          </div>
+          <button id="createRoomBtn" title="Create new room">+</button>
+        </div>
+        <div id="rooms-list" class="collapsible"></div>
+      </div>
+    </aside>
+
+    <!-- CENTER PANEL -->
+    <main class="center-panel">
+      <header class="center-header">
+        <div id="header-title" class="room-header-clickable" style="display:flex; align-items:center; gap:10px; cursor:pointer;">
+          <img id="header-icon" src="../shared/default-avatar.png" style="width:32px; height:32px; border-radius:50%; object-fit:cover; background:#222; display:none;">
+          <span id="header-name" style="color:#ff1493; font-weight:bold; font-size:18px;">Select a chat</span>
+        </div>
+        <div class="header-actions" style="margin-left:auto; display:flex; gap:12px;">
+          <button class="icon-btn" id="fullscreenBtn" title="Fullscreen">⛶</button>
+          <button class="icon-btn" id="searchChatBtn" title="Search">🔍</button>
+          <button class="icon-btn" id="notifBtn" title="Notifications" style="position:relative;">
+            🔔
+            <span id="notifCountTop" style="position:absolute; top:-4px; right:-4px; background:#ff2a6d; color:#fff; border-radius:50%; width:16px; height:16px; font-size:10px; display:none; align-items:center; justify-content:center; font-weight:bold;">0</span>
+          </button>
+          <button class="icon-btn" id="membersToggleBtn" title="Members">👥</button>
+        </div>
+      </header>
+      
+      <div class="messages" id="messages"></div>
+<div id="typingIndicator"></div>
+
+<style>
+#typingIndicator {
+  min-height: 22px;
+  padding: 4px 18px;
+  font-size: 13px;
+  color: #b8b8b8;
+  font-style: italic;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+  pointer-events: none;
+}
+#typingIndicator:empty {
+  display: none;
+}
+</style>
+   
+      <footer class="chat-input">
+        <input type="text" id="messageInput" placeholder="Type a message... @user" disabled>
+        <button class="send-btn" id="sendBtn" disabled>Send</button>
+      </footer>
+    </main>
+
+    <!-- RIGHT SIDEBAR -->
+    <aside class="right-sidebar hidden" id="rightSidebar">
+      <div class="right-content" id="right-content"></div>
+    </aside>
+
+  </div>
+
+  <!-- B: Sound for notifications -->
+  <audio id="notifSound" preload="auto">
+    <source src="https://assets.mixkit.co/sfx/preview/mixkit-modern-click-box-check-1120.mp3" type="audio/mpeg">
+  </audio>
+
+  <script type="module" src="chat.js"></script>
+  <script type="module" src="../shared/supabase.js"></script>
+</body>
+</html>

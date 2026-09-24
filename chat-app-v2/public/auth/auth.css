@@ -1,0 +1,100 @@
+body {
+  background: #0a0a0a;
+  color: #fff;
+  font-family: 'Poppins', sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+.auth-container {
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.logo {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  color: #a855f7;
+}
+
+.tab-switch {
+  display: flex;
+  background: #1a1a1a;
+  border-radius: 12px;
+  padding: 5px;
+  margin-bottom: 20px;
+}
+
+.tab {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  background: transparent;
+  color: #aaa;
+  font-size: 1rem;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: 0.3s;
+}
+
+.tab.active {
+  background: #a855f7;
+  color: #fff;
+}
+
+.form-card {
+  background: #1a1a1a;
+  padding: 25px;
+  border-radius: 16px;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.hidden { display: none; }
+
+input, select {
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #333;
+  background: #0a0a0a;
+  color: #fff;
+  outline: none;
+}
+
+input:focus, select:focus {
+  border-color: #a855f7;
+}
+
+.remember {
+  text-align: left;
+  font-size: 0.9rem;
+  color: #aaa;
+}
+
+.btn {
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background: #a855f7;
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn:hover {
+  background: #9333ea;
+}
+
+.error {
+  color: #ff4d4d;
+  margin-top: 15px;
+}
